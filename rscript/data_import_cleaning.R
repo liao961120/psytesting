@@ -265,11 +265,14 @@ psy_test <- psy_test %>%
                     "獸醫系"="獸醫",
                     "體育系"="體育學系"))
 
-# remove duplicated rows
+# remove duplicated & NA rows
 
 dupli_index <- duplicated(psy_test[,-1]) ## return rows that are duplicated by comparing all variables except datetime
 #dupli_rows <- psy_test[dupli_index,]
 psy_test <- psy_test[!dupli_index, ]  ## rows not duplicated
+
+NA_row <- is.na(psy_test$`3`)
+psy_test <- psy_test[!NA_row,]
 
 # write to rds: R's data specific data storage
 write_rds(psy_test, "./data/psy_test_parsed.rds")
