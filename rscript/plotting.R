@@ -4,6 +4,7 @@ library(ggplot2)
 library(plotly)
 library(cowplot)
 library(scales) # for ggplot color
+library(corrplot)
 
 psy_test <- read_rds("./data/psy_test_analy.rds")
 var_info <- read_rds("./data/item_construct_conNum.rds")
@@ -109,3 +110,32 @@ p_RF <- plot_grid(plot_distr(item[1],cl[4]), plot_distr(item[2],cl[4]),
                    plot_distr(item[7],cl[4]), plot_distr(item[8],cl[4]),
                    plot_distr(item[9],cl[4]), plot_distr(item[10],cl[4]),
                    labels = label[1:10], vjust = 1, hjust=-2, label_size=11, ncol=4, nrow=3)
+
+## correlation matrix-------------------
+AT_item <- var_info$vars_en[var_info$construct_en=="AT"]
+AT_item <- AT_item[!is.na(AT_item)]
+CF_item <- var_info$vars_en[var_info$construct_en=="CF"]
+CF_item <- CF_item[!is.na(CF_item)]
+HD_item <- var_info$vars_en[var_info$construct_en=="HD"]
+HD_item <- HD_item[!is.na(HD_item)]
+RF_item <- var_info$vars_en[var_info$construct_en=="RF"]
+RF_item <- RF_item[!is.na(RF_item)]
+Fk_item <- var_info$vars_en[var_info$construct_en=="F"]
+Fk_item <- Fk_item[!is.na(Fk_item)]
+All_data <- psy_test_f %>%
+    select(AT_item,CF_item,Fk_item,HD_item,RF_item)
+
+colnames(All_data) <- var_info$con_num[1:62]
+# which(colnames(All_data)=="F-01")  # finding index
+# which(colnames(All_data)=="F-06")  # finding index
+All_data <- All_data[,-(27:32)] # without Fk
+cor_mt <- round(cor(All_data), 2) # rounded corr matrix
+
+for (i in 1:nrow(cor_mt)){ # set diagonal from 1 to 0
+    cor_mt[i,i] <- 0        # to free
+}
+
+col3 <- colorRampPalette(c("purple","blue","white", "red", "orange"))
+corrplot(cor_mt, method="color",  
+         type="full", order="hclust",
+         sig.level = 0.05, insig = "blank", col=col3(200))

@@ -81,7 +81,7 @@ item_mean <- sapply(item_data, mean)
 item_sd <- sapply(item_data, sd)
 item_skew <- sapply(item_data, skewness)
 
-### H-L
+### H-L------------------------
 item_data_H <- item_data %>%
     filter(total >= quantile(item_data$total, p=.725))
 item_data_L <- item_data %>%
@@ -89,6 +89,29 @@ item_data_L <- item_data %>%
 item_mean_H <- sapply(item_data_H, mean)
 item_mean_L <- sapply(item_data_L, mean)
 
+
+### corr with construct--------------------
+item_stats <- item_stats %>% mutate(corr=1)
+for (i in item_stats$item){
+    if (item_stats[item_stats$item==i, "construct"] == "AT"){
+        item_stats[item_stats$item==i, "corr"] <- 
+            cor(psy_test_f[,i], psy_test_f$AT)
+    }
+    else if (item_stats[item_stats$item==i, "construct"] == "CF"){
+        item_stats[item_stats$item==i, "corr"] <- 
+            cor(psy_test_f[,i], psy_test_f$CF)
+    }
+    else if (item_stats[item_stats$item==i, "construct"] == "HD"){
+        item_stats[item_stats$item==i, "corr"] <- 
+            cor(psy_test_f[,i], psy_test_f$HD)
+    }
+    else if (item_stats[item_stats$item==i, "construct"] == "RF"){
+        item_stats[item_stats$item==i, "corr"] <- 
+            cor(psy_test_f[,i], psy_test_f$RF)
+    }
+}
+
+### combine----------------
 row_name <- names(item_data)
 
 stats <- as.data.frame(cbind(item_mean, item_sd, item_skew, item_mean_H, item_mean_L)) %>%
@@ -97,3 +120,4 @@ stats <- as.data.frame(cbind(item_mean, item_sd, item_skew, item_mean_H, item_me
     mutate(var=row_name) %>%
     left_join(item_stats, by=c("var"="item")) %>%
     select(var, construct, code,everything(),-H,-L)
+
