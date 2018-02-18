@@ -1,6 +1,7 @@
 library(readr)
 library(dplyr)
 library(psych)
+library(e1071) # for skewness calculation
 library(ggplot2)
 
 psy_test <- read_rds("./data/psy_test_analy.rds")
@@ -72,4 +73,27 @@ for (i in item_stats$item){
     }
 }
 
+## stats: mean, sd, skewness, H-L, corr --------------
+item_data <- psy_test_f %>%
+    select(AT_item,CF_item,HD_item,RF_item,AT,CF,HD,RF,total)
 
+item_mean <- sapply(item_data, mean)
+item_sd <- sapply(item_data, sd)
+item_skew <- sapply(item_data, skewness)
+
+### H-L
+item_data_H <- item_data %>%
+    filter(total >= quantile(item_data$total, p=.725))
+item_data_L <- item_data %>%
+    filter(total <= quantile(item_data$total, p=.275))
+item_mean_H <- sapply(item_data_H, mean)
+item_mean_L <- sapply(item_data_L, mean)
+
+row_name <- names(item_data)
+
+stats <- as.data.frame(cbind(item_mean, item_sd, item_skew, item_mean_H, item_mean_L)) %>%
+    rename(mean=item_mean, sd=item_sd, skew=item_skew, H=item_mean_H, L=item_mean_L) %>%
+    mutate(Diff = H - L) %>%
+    mutate(var=row_name) %>%
+    left_join(item_stats, by=c("var"="item")) %>%
+    select(var, construct, code,everything(),-H,-L)
