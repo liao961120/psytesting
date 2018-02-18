@@ -2,9 +2,7 @@ library(readr)
 library(dplyr)
 library(psych)
 library(ggplot2)
-library(plotly)
-library(cowplot)
-library(scales) # for ggplot color
+
 psy_test <- read_rds("./data/psy_test_analy.rds")
 var_info <- read_rds("./data/item_construct_conNum.rds")
 
@@ -39,22 +37,39 @@ RF_data <- psy_test_f %>%
 Fk_data <- psy_test_f %>%
     select(Fk_item)
 
-psych::alpha(All_data)$total$std.alpha
-psych::alpha(AT_data)$total$std.alpha
-psych::alpha(CF_data)$total$std.alpha
-psych::alpha(HD_data)$total$std.alpha
-psych::alpha(RF_data)$total$std.alpha
-psych::alpha(Fk_data)$total$std.alpha
+all_alpha <- psych::alpha(All_data)$total$std.alpha
+AT_alpha <- psych::alpha(AT_data)$total$std.alpha
+CF_alpha <- psych::alpha(CF_data)$total$std.alpha
+HD_alpha <- psych::alpha(HD_data)$total$std.alpha
+RF_alpha <- psych::alpha(RF_data)$total$std.alpha
+Fk_alpha <- psych::alpha(Fk_data)$total$std.alpha
 
-# summ <- psy_test %>% 
-#     group_by(dept) %>% 
-#     summarise(count=n(),
-#               AT=mean(AT),
-#               CF=mean(CF),
-#               HD=mean(HD),
-#               RF=mean(RF),
-#               Fk=mean(Fk),
-#               score=mean(total)) %>%
-#     filter(count>=5)
+## delete alpha--------------
+item_stats <- var_info[1:62, -c(4,5,6)] %>% filter(construct_en != "F")
+item_stats <- cbind(item_stats,c(rep(0, nrow(item_stats))),c(rep(0, nrow(item_stats))) )
+colnames(item_stats) <- c("item","construct","code","alpha_ori","alpha")
+
+for (i in item_stats$item){
+    if (item_stats[item_stats$item==i, "construct"] == "AT"){
+        index <- which(colnames(AT_data)==i)
+        item_stats[item_stats$item==i, "alpha_ori"] <- AT_alpha
+        item_stats[item_stats$item==i, "alpha"] <- psych::alpha(AT_data[,-index])$total$std.alpha
+    } 
+    else if (item_stats[item_stats$item==i, "construct"] == "CF"){
+        index <- which(colnames(CF_data)==i)
+        item_stats[item_stats$item==i, "alpha_ori"] <- CF_alpha
+        item_stats[item_stats$item==i, "alpha"] <- psych::alpha(CF_data[,-index])$total$std.alpha
+    } 
+    else if (item_stats[item_stats$item==i, "construct"] == "HD"){
+        index <- which(colnames(HD_data)==i)
+        item_stats[item_stats$item==i, "alpha_ori"] <- HD_alpha
+        item_stats[item_stats$item==i, "alpha"] <- psych::alpha(HD_data[,-index])$total$std.alpha
+    } 
+    else if (item_stats[item_stats$item==i, "construct"] == "RF"){
+        index <- which(colnames(RF_data)==i)
+        item_stats[item_stats$item==i, "alpha_ori"] <- RF_alpha
+        item_stats[item_stats$item==i, "alpha"] <- psych::alpha(RF_data[,-index])$total$std.alpha
+    }
+}
 
 
