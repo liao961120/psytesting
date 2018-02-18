@@ -3,8 +3,11 @@ library(dplyr)
 library(ggplot2)
 library(plotly)
 library(psych)
+library(cowplot)
+library(scales) # for ggplot color
 psy_test <- read_rds("./data/psy_test_analy.rds")
-var_info <- read_rds("./data/item_construct.rds")
+var_info <- read_rds("./data/item_construct_conNum.rds")
+
 
 AT_item <- var_info$vars_en[var_info$construct_en=="AT"]
     AT_item <- AT_item[!is.na(AT_item)]
@@ -50,7 +53,30 @@ pl_cutoff <- ggplot(Fk_cutoff)+
     scale_y_continuous(breaks = seq(0.05,0.4,by=0.05))+
     scale_x_reverse(breaks=15:30)+
     labs(x="Cutoff", y="Corr. with Fk", color="Construct")
-ggplotly(pl_cutoff)
+# ggplotly(pl_cutoff)
+
+
+# EDA
+## Distributions
+plot_distr <- function(item, color="#F8766D"){
+    pl <- ggplot(data = psy_test_f)+
+        geom_bar(aes(x=psy_test_f[,item]), fill=color)+
+        scale_y_continuous(limits = c(0,125))+
+        scale_x_discrete(limits=c("1","2","3","4","5"))+
+        labs(x="", y="")
+    pl
+}
+
+cl <- hue_pal()(4) ## ggplot default color generator 
+
+p_AT <- plot_grid(plot_distr(AT_item[1]), plot_distr(AT_item[2]),
+        plot_distr(AT_item[3]), plot_distr(AT_item[4]),
+        plot_distr(AT_item[5]), plot_distr(AT_item[6]),
+        plot_distr(AT_item[7]), plot_distr(AT_item[8]),
+        plot_distr(AT_item[9]),
+        labels = AT_item)
+save_plot("./out_graph/AT_distribution.png",p_AT)
+
 
 # Cronbach's alpha--------------
 All_data <- psy_test_f %>%
