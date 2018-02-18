@@ -1,0 +1,44 @@
+---
+title: "test"
+output: bookdown::html_document2
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE, comment="")
+knitr::opts_knit$set(root.dir='..')
+```
+
+```{r}
+library(widgetframe)
+source("./rscript/plotting.r")
+```
+
+
+```{r}
+p_AT
+p_CF1
+p_CF2
+p_HD1
+p_HD2
+p_RF
+```
+
+
+## widgetframe
+
+```{r}
+frameWidget(ggplotly(pl_cutoff))
+```
+
+```{r}
+ggplotly(pl_cutoff)
+```
+
+```{r}
+library(leaflet)
+library(widgetframe)
+## Loading required package: htmlwidgets
+l <- leaflet() %>% addTiles() %>% setView(0,0,2)
+frameWidget(l, height = '400')
+```
+
