@@ -1,0 +1,27 @@
+---
+title: "HTML Widgets"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE, comment="")
+knitr::opts_knit$set(root.dir='..')
+```
+
+## ggplotly
+```{r}
+library(ggplot2)
+library(plotly)
+
+p <- ggplot(mtcars)+
+    geom_point(aes(x=mpg, y=disp, color=cyl))
+ggplotly(p)
+```
+
+## heatmaply
+```{r fig.width=6, fig.height=5}
+library(heatmaply)
+source("./rscript/corr_matrix.R")
+hm
+```
+

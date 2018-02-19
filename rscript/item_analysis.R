@@ -121,3 +121,4 @@ stats <- as.data.frame(cbind(item_mean, item_sd, item_skew, item_mean_H, item_me
     left_join(item_stats, by=c("var"="item")) %>%
     select(var, construct, code,everything(),-H,-L)
 
+write_rds(psy_test_f, "./data/psy_test_filtered.rds")

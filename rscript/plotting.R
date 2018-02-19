@@ -5,8 +5,11 @@ library(plotly)
 library(cowplot)
 library(scales) # for ggplot color
 library(corrplot)
+library(RColorBrewer)
+# library(heatmaply)
 
 psy_test <- read_rds("./data/psy_test_analy.rds")
+psy_test_f <- read_rds("./data/psy_test_filtered.rds")
 var_info <- read_rds("./data/item_construct_conNum.rds")
 
 ## Fk: gradient-------------------------
@@ -41,17 +44,13 @@ pl_cutoff <- ggplot(Fk_cutoff)+
 
 
 ## Distributions-------------------
-psy_test_f <- psy_test %>%
-    filter(grade != "first") %>%
-    filter(Fk <= 18)
-
 plot_distr <- function(item, color="#F8766D"){
-    pl <- ggplot(data = psy_test_f)+
-        geom_bar(aes(x=psy_test_f[,item]), fill=color)+
+    x_axis <- as.character(unlist((psy_test_f[,item])))
+    ggplot()+
+        geom_bar(aes(x=x_axis), fill=color)+
         scale_y_continuous(limits = c(0,125))+
         scale_x_discrete(limits=c("1","2","3","4","5"))+
         labs(x="", y="")
-    pl
 }
 
 cl <- hue_pal()(4) ## ggplot default color generator 
@@ -131,11 +130,19 @@ colnames(All_data) <- var_info$con_num[1:62]
 All_data <- All_data[,-(27:32)] # without Fk
 cor_mt <- round(cor(All_data), 2) # rounded corr matrix
 
-for (i in 1:nrow(cor_mt)){ # set diagonal from 1 to 0
-    cor_mt[i,i] <- 0        # to free
-}
+# for (i in 1:nrow(cor_mt)){ # set diagonal from 1 to 0
+#     cor_mt[i,i] <- 0        # to free
+# }
 
 col3 <- colorRampPalette(c("purple","blue","white", "red", "orange"))
 corrplot(cor_mt, method="color",  
          type="full", order="hclust",
          sig.level = 0.05, insig = "blank", col=col3(200))
+
+### heatmaply------------------
+BrBG <- colorRampPalette(brewer.pal(11, "BrBG"))
+Spectral <- colorRampPalette(brewer.pal(11, "Spectral"))
+heatmaply(cor_mt, margins = c(40, 40),
+          k_col = 2, k_row = 2,
+          colors = BrBG,
+          limits = c(-0.5,1))
