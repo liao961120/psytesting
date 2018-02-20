@@ -34,7 +34,7 @@ pie <- ggplot(gender, aes(x="", y=n, fill=gender))+
     coord_polar("y", start=0) +
     scale_fill_manual(values=c(hue[1], hue[3], "black"))+
     blank_theme+
-    geom_text(aes(y = c(140, 43, 218), # label position adjustment
+    geom_text(aes(y = c(140, 43, 217.5), # label position adjustment
               label = percent(n/sum(n))), size=3, vjust="outward",hjust="outward")+
     labs(title="Gender Percentage", fill="Gender", subtitle =paste(" Samples: ",sum(gender$n), sep=""))
 
