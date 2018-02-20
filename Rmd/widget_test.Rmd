@@ -25,3 +25,11 @@ source("./rscript/corr_matrix.R")
 hm
 ```
 
+## pie chart
+
+### Source Chinese
+```{r fig.width=3, fig.height=3, dev='svg'}
+source("./rscript/plotting_descri.R", encoding = "utf-8")
+pie
+```
+
