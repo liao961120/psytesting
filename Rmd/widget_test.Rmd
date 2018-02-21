@@ -8,15 +8,6 @@ knitr::opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE, comment="")
 knitr::opts_knit$set(root.dir='..')
 ```
 
-## ggplotly
-```{r}
-library(ggplot2)
-library(plotly)
-
-p <- ggplot(mtcars)+
-    geom_point(aes(x=mpg, y=disp, color=cyl))
-ggplotly(p)
-```
 
 ## heatmaply
 ```{r fig.width=6, fig.height=5}
@@ -27,8 +18,17 @@ hm
 
 ## pie chart
 
-```{r fig.width=4, fig.height=4, dev='svg'}
+```{r dpi=130 ,fig.width=5.5, fig.height=4}
+library(cowplot)
 source("./rscript/plotting_descri.R", encoding = "utf-8")
-pie
+plot_grid(dept, college, nrow=2)
 ```
+
+<br>
+
+```{r dev='svg' ,fig.width=6, fig.height=4}
+plot_grid(gender, grade, ncol=2)
+```
+
+
 

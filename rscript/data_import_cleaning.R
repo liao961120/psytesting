@@ -34,9 +34,9 @@ psy_test <- psy_test %>%
                     "second"="二",
                     "third"="三",
                     "forth"="四",
-                    "suspend "="休學",
-                    "NoDegree "="未畢\\肄業",
-                    "graduated "="畢\\肄業")) %>%
+                    "suspend" = "休學",
+                    "NoDegree" = "未畢\\肄業",
+                    "graduated" = "畢\\肄業")) %>%
     mutate(college=fct_recode(college,
                     "靜宜大學"="靜宜",
                     "靜宜大學"="?宜",

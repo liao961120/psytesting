@@ -139,10 +139,3 @@ corrplot(cor_mt, method="color",
          type="full", order="hclust",
          sig.level = 0.05, insig = "blank", col=col3(200))
 
-### heatmaply------------------
-BrBG <- colorRampPalette(brewer.pal(11, "BrBG"))
-Spectral <- colorRampPalette(brewer.pal(11, "Spectral"))
-heatmaply(cor_mt, margins = c(40, 40),
-          k_col = 2, k_row = 2,
-          colors = BrBG,
-          limits = c(-0.5,1))
