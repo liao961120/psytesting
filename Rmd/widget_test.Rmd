@@ -30,5 +30,13 @@ plot_grid(dept, college, nrow=2)
 plot_grid(gender, grade, ncol=2)
 ```
 
+<br>
 
+## **Score Comparison**
+```{r dev='svg', fig.height=6}
+library(cowplot)
+source("./rscript/anova.R", encoding = "utf-8")
+
+plot_grid(gender_box_plot,ntu_box_plot,grade_box_plot, nrow=2, rel_heights = c(1, 1.3))
+```
 

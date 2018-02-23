@@ -45,7 +45,13 @@ HD_alpha <- psych::alpha(HD_data)$total$std.alpha
 RF_alpha <- psych::alpha(RF_data)$total$std.alpha
 Fk_alpha <- psych::alpha(Fk_data)$total$std.alpha
 
-## delete alpha--------------
+## construct corr--------------------
+construct_score <- psy_test_f %>%
+    select(AT, CF, HD, RF, total)
+construct_cor_mt <- round(cor(construct_score), 2) # rounded corr matrix
+
+
+## delete-self alpha--------------
 item_stats <- var_info[1:62, -c(4,5,6)] %>% filter(construct_en != "F")
 item_stats <- cbind(item_stats,c(rep(0, nrow(item_stats))),c(rep(0, nrow(item_stats))) )
 colnames(item_stats) <- c("item","construct","code","alpha_ori","alpha")
@@ -120,5 +126,8 @@ stats <- as.data.frame(cbind(item_mean, item_sd, item_skew, item_mean_H, item_me
     mutate(var=row_name) %>%
     left_join(item_stats, by=c("var"="item")) %>%
     select(var, construct, code,everything(),-H,-L)
+
+
+
 
 write_rds(psy_test_f, "./data/psy_test_filtered.rds")

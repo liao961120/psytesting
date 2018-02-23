@@ -17,8 +17,23 @@ psy_test_f <- psy_test_f %>%
             "Others" = "NoDegree",
             "Others" = "suspend")) %>%
     mutate(grade = grade %>% fct_infreq())
+## plotting parameters==================
+alpha <- c(gender=1, ntu=1, grade=1) # opacity
+x_lab <- c(gender="Construct", ntu="", grade="Construct")
+y_lab <- c(gender="Avg Score", 
+           ntu="Avg Score", 
+           grade="Avg Score")
+title <- c(gender=" ", 
+           ntu=" ", 
+           grade=" ")
+subtitle <- c(gender="Male vs. Female", 
+              ntu="NTU vs. non-NTU", 
+              grade="Grade")
 
-#### ploting theme-----------------
+# plot_grid(gender_box_plot,ntu_box_plot,grade_box_plot, nrow=2, rel_heights = c(1, 1.3)) +
+#     draw_label("Score Comparison", x = 0.1, y = 1, hjust=0.26, vjust=1, size = 16, fontface = 'bold')
+
+## ploting theme-----------------
 theme <- theme(
     plot.subtitle = element_text(size = 9, face = "bold"),
     plot.caption = element_text(size = 7, face = "plain", vjust = 0),
@@ -29,6 +44,7 @@ theme <- theme(
     plot.title = element_text(hjust = 0, size = 14, face = "bold"))
 
 
+#=============================
 ## Gender t-test-------------
 gender_t_data <- psy_test_f %>% filter(gender != "other")
 
@@ -78,30 +94,68 @@ ntu_ttest_df <- as.data.frame(cbind(AT_t, CF_t, HD_t, RF_t, total_t)) %>%
 
 
 
-### AT_gender box plot (only AT sig.)----------------
-AT_gender <- gender_t_data %>%
-    mutate(gender = fct_recode(gender,
-                "Female" = "female",
-                "Male" = "male")) %>%
-    mutate(gender = gender %>% fct_infreq()) %>%
-    ggplot(aes(x = gender, y = AT/sum(var_info$construct_en=="AT", na.rm = T), fill=gender)) + # scale y as avg score
-    geom_boxplot(show.legend = F) +
+#=============================
+## Gender box==========================
+### gender_box_pl_data------------------
+AT_data <- gender_t_data %>%
+    mutate(construct="AT") %>%
+    select(construct, gender, AT) %>%
+    rename(value=AT) %>%
+    mutate(value = value/sum(var_info$construct_en=="AT", na.rm = T))
+
+CF_data <- gender_t_data %>%
+    mutate(construct="CF") %>%
+    select(construct, gender, CF) %>%
+    rename(value=CF) %>%
+    mutate(value = value/sum(var_info$construct_en=="CF", na.rm = T))
+
+HD_data <- gender_t_data %>%
+    mutate(construct="HD") %>%
+    select(construct, gender, HD) %>%
+    rename(value=HD) %>%
+    mutate(value = value/sum(var_info$construct_en=="HD", na.rm = T))
+
+RF_data <- gender_t_data %>%
+    mutate(construct="RF") %>%
+    select(construct, gender, RF) %>%
+    rename(value=RF) %>%
+    mutate(value = value/sum(var_info$construct_en=="RF", na.rm = T))
+
+total_data <- gender_t_data %>%
+    mutate(construct="total") %>%
+    select(construct, gender, total) %>%
+    rename(value=total) %>%
+    mutate(value = value/56) # 56 items in total (F not included)
+
+gender_box_pl_data <- rbind(AT_data, CF_data, HD_data, RF_data, total_data)
+
+### gender_box_plot--------------------------
+gender_box_pl_data <- gender_box_pl_data %>% 
+    mutate(construct = as_factor(construct),
+           gender = as_factor(gender)) %>%
+    mutate(gender=fct_recode(gender,
+                "Female"="female",
+                "Male"="male")) 
+
+gender_box_plot <- ggplot(gender_box_pl_data, aes(x=construct, y=value)) + 
+    geom_boxplot(aes(fill=gender), alpha = alpha[1]) +
+    # scale_fill_manual(values = grey.colors(2)) + # change boxplot color
     theme +
     theme (
-        axis.text.y = element_text(size = 8, face = "bold"),
+        axis.text.y = element_text(size = 9, face = "bold"),
         axis.ticks.y = element_blank()) +
     scale_y_continuous(limits=c(1,5), breaks = 1:5) +
-    labs(title="AT Comparison", subtitle="Male vs. Female", x="", y="AT Avg. Score", fill="Grade")+
+    labs(title=title[1], subtitle=subtitle[1], y=y_lab[1], x=x_lab[1], fill="Gender") +
     coord_flip()
+# library(plotly)
+# ggplotly(gender_box_plot)
 
-
-### ntu box plot (AT CF sig.)-------------
-#### box plot data-------------------
+### NTU box============================
+#### ntu_box_pl_data-------------------
 AT_data <- ntu_t_data %>%
     mutate(college = fct_recode(college,
             "其它學校" = "Other")) %>%
     mutate(college = college %>% fct_infreq()) %>%
-    filter(college=="臺灣大學"|college=="其它學校") %>%
     mutate(construct="AT") %>%
     select(construct, college, AT) %>%
     rename(value=AT) %>%
@@ -111,7 +165,6 @@ CF_data <- ntu_t_data %>%
     mutate(college = fct_recode(college,
             "其它學校" = "Other")) %>%
     mutate(college = college %>% fct_infreq()) %>%
-    filter(college=="臺灣大學"|college=="其它學校") %>%
     mutate(construct="CF") %>%
     select(construct, college, CF) %>%
     rename(value=CF) %>%
@@ -121,7 +174,6 @@ HD_data <- ntu_t_data %>%
     mutate(college = fct_recode(college,
                     "其它學校" = "Other")) %>%
     mutate(college = college %>% fct_infreq()) %>%
-    filter(college=="臺灣大學"|college=="其它學校") %>%
     mutate(construct="HD") %>%
     select(construct, college, HD) %>%
     rename(value=HD) %>%
@@ -131,7 +183,6 @@ RF_data <- ntu_t_data %>%
     mutate(college = fct_recode(college,
                     "其它學校" = "Other")) %>%
     mutate(college = college %>% fct_infreq()) %>%
-    filter(college=="臺灣大學"|college=="其它學校") %>%
     mutate(construct="RF") %>%
     select(construct, college, RF) %>%
     rename(value=RF) %>%
@@ -141,32 +192,34 @@ total_data <- ntu_t_data %>%
     mutate(college = fct_recode(college,
                     "其它學校" = "Other")) %>%
     mutate(college = college %>% fct_infreq()) %>%
-    filter(college=="臺灣大學"|college=="其它學校") %>%
     mutate(construct="total") %>%
     select(construct, college, total) %>%
     rename(value=total) %>%
     mutate(value = value/56) # 56 items in total (F not included)
 
-box_pl_data <- rbind(AT_data, CF_data, HD_data, RF_data, total_data)
+ntu_box_pl_data <- rbind(AT_data, CF_data, HD_data, RF_data, total_data)
     
-### ntu box plot------------------------
-
-box_pl_data <- box_pl_data %>% 
+### ntu_box_plot------------------------
+ntu_box_pl_data <- ntu_box_pl_data %>% 
     mutate(construct = as_factor(construct),
            college = as_factor(college)) %>%
+    mutate(college=fct_recode(college,
+                "NTU"="臺灣大學",
+                "non-NTU"="其它學校")) %>%
     mutate(college = fct_reorder(college, value))
 
-ggplot(box_pl_data, aes(x=construct, y=value)) + 
-    geom_boxplot(aes(fill=college)) +
+ntu_box_plot <- ggplot(ntu_box_pl_data, aes(x=construct, y=value)) + 
+    geom_boxplot(aes(fill=college), alpha = alpha[2]) +
     scale_fill_manual(values = grey.colors(2)) + # change boxplot color
     theme +
     theme (
         axis.text.y = element_text(size = 9, face = "bold"),
         axis.ticks.y = element_blank()) +
     scale_y_continuous(limits=c(1,5), breaks = 1:5) +
-    labs(title="Score Comparison",subtitle="NTU vs. non-NTU",y="Avg Score", x="Construct") +
+    labs(title=title[2], subtitle=subtitle[2], y=y_lab[2], x=x_lab[2], fill="College") +
     coord_flip()
-
+# library(plotly)
+# ggplotly(ntu_box_plot)
 
 ## Grade=======================
 ### ANOVA--------------------
@@ -201,19 +254,58 @@ RF_post <- RF_post %>%
            `p-value`=round(`p-value`,4))%>%
     select(var, everything())
 
-### AT box plot--------------
-AT_box <- anova_data %>%
-    mutate(grade = grade %>% fct_infreq()) %>%
-    ggplot(aes(x = grade, y = AT, fill = grade)) +
-    geom_boxplot(show.legend = F) +
-    theme +
-    labs(title="AT ANOVA", x="Grade", y="AT Score")
+
+### grade_box_pl_data------------------
+AT_data <- psy_test_f %>%
+    mutate(construct="AT") %>%
+    select(construct, grade, AT) %>%
+    rename(value=AT) %>%
+    mutate(value = value/sum(var_info$construct_en=="AT", na.rm = T))
+
+CF_data <- psy_test_f %>%
+    mutate(construct="CF") %>%
+    select(construct, grade, CF) %>%
+    rename(value=CF) %>%
+    mutate(value = value/sum(var_info$construct_en=="CF", na.rm = T))
+
+HD_data <- psy_test_f %>%
+    mutate(construct="HD") %>%
+    select(construct, grade, HD) %>%
+    rename(value=HD) %>%
+    mutate(value = value/sum(var_info$construct_en=="HD", na.rm = T))
+
+RF_data <- psy_test_f %>%
+    mutate(construct="RF") %>%
+    select(construct, grade, RF) %>%
+    rename(value=RF) %>%
+    mutate(value = value/sum(var_info$construct_en=="RF", na.rm = T))
+
+total_data <- psy_test_f %>%
+    mutate(construct="total") %>%
+    select(construct, grade, total) %>%
+    rename(value=total) %>%
+    mutate(value = value/56) # 56 items in total (F not included)
+
+grade_box_pl_data <- rbind(AT_data, CF_data, HD_data, RF_data, total_data)
 
 
-### RF box plot-------------
-RF_box <- anova_data %>%
-    mutate(grade = grade %>% fct_infreq()) %>%
-    ggplot(aes(x = grade, y = RF, fill = grade)) +
-    geom_boxplot(show.legend = F) +
+
+### grade_box_plot--------------------------
+grade_box_pl_data <- grade_box_pl_data %>% 
+    mutate(construct = as_factor(construct),
+           grade = as_factor(grade)) %>%
+    mutate(grade=fct_infreq(grade)) 
+
+grade_box_plot <- ggplot(grade_box_pl_data, aes(x=construct, y=value)) + 
+    geom_boxplot(aes(fill=grade), alpha = alpha[3]) +
+    # scale_fill_manual(values = grey.colors(2)) + # change boxplot color
     theme +
-    labs(title="RF ANOVA", x="Grade", y="RF Score")
+    theme (
+        axis.text.y = element_text(size = 9, face = "bold"),
+        axis.ticks.y = element_blank()) +
+    scale_y_continuous(limits=c(1,5), breaks = 1:5) +
+    labs(title=title[3], subtitle=subtitle[3], y=y_lab[3], x=x_lab[3], fill="Grade") +
+    coord_flip()
+# library(plotly)
+# ggplotly(grade_box_plot)
+

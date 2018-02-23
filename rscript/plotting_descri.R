@@ -63,8 +63,7 @@ grade <- psy_test_f %>%
         axis.title.x=element_text(size=10, face="bold"),
         axis.title.y=element_text(size=10, face="bold"),
         plot.title=element_text(hjust=0, size=14, face="bold"))+
-    labs(x="", y="Count",title="Grade Composition", fill="Grade", subtitle=paste(" Samples: ",sum(nrow(psy_test_f)),sep=""), caption="*Forth: Grades include & above four. \n *Graduated: Includes grad school student.")
-
+    labs(x="", y="Count",title="Grade Composition", fill="Grade", subtitle=paste(" Samples: ",sum(nrow(psy_test_f)),sep=""), caption='Forth: Grades above four included. \n Graduated: Grad school students included.')
 
 ## college---------------------
 # levels(fct_lump(psy_test_f$college %>% fct_infreq(), n=9))
