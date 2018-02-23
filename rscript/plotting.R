@@ -12,6 +12,16 @@ psy_test <- read_rds("./data/psy_test_analy.rds")
 psy_test_f <- read_rds("./data/psy_test_filtered.rds")
 var_info <- read_rds("./data/item_construct_conNum.rds")
 
+## plotting theme ----------------
+theme <- theme(
+    plot.subtitle = element_text(size = 9, face = "bold"),
+    plot.caption = element_text(size = 7, face = "plain", vjust = 0),
+    axis.text.x = element_text(size = 7, face = "plain"),
+    axis.text.y = element_text(size = 7, face = "plain"),
+    axis.title.x = element_text(size = 10, face = "bold"),
+    axis.title.y = element_text(size = 10, face = "bold"),
+    plot.title = element_text(hjust = 0, size = 14, face = "bold"))
+
 ## Fk: gradient-------------------------
 Fk_cutoff <- tibble(i=15:30,
                     AT=rep(0,length(15:30)),
@@ -38,8 +48,9 @@ pl_cutoff <- ggplot(Fk_cutoff)+
     geom_line(mapping = aes(x=i,y=RF,color="RF"),size=1)+
     geom_line(mapping = aes(x=i,y=total,color="total"),size=1)+
     scale_y_continuous(breaks = seq(0.05,0.4,by=0.05))+
+    theme +
     scale_x_reverse(breaks=15:30)+
-    labs(x="Cutoff", y="Corr. with Fk", color="Construct")
+    labs(x="Cutoff", y="Corr. with Fake-Good", color="Construct")
 # ggplotly(pl_cutoff)
 
 
@@ -50,12 +61,13 @@ plot_distr <- function(item, color="#F8766D"){
         geom_bar(aes(x=x_axis), fill=color)+
         scale_y_continuous(limits = c(0,125))+
         scale_x_discrete(limits=c("1","2","3","4","5"))+
+        theme +
         labs(x="", y="")
 }
 
 cl <- hue_pal()(4) ## ggplot default color generator 
 
-### AT----------------------
+### p_AT----------------------
 AT_item <- unname(unlist(var_info[var_info$construct_en=="AT" & !is.na(var_info$construct_en),"vars_en"]))
 p_AT <- plot_grid(plot_distr(AT_item[1]), plot_distr(AT_item[2]),
                   plot_distr(AT_item[3]), plot_distr(AT_item[4]),
@@ -64,7 +76,7 @@ p_AT <- plot_grid(plot_distr(AT_item[1]), plot_distr(AT_item[2]),
                   plot_distr(AT_item[9]),
                   labels = unlist(var_info[var_info$construct_en=="AT","con_num"]), vjust = 1, hjust=-2, label_size=11, ncol=4, nrow=3)
 
-### CF----------------------
+### p_CF1 p_CF2----------------------
 CF_item <- unname(unlist(var_info[var_info$construct_en=="CF" & !is.na(var_info$construct_en),"vars_en"]))
 label <- unlist(var_info[var_info$construct_en=="CF" & !is.na(var_info$construct_en),"con_num"])
     
@@ -74,14 +86,14 @@ p_CF1 <- plot_grid(plot_distr(CF_item[1],cl[2]), plot_distr(CF_item[2],cl[2]),
                   plot_distr(CF_item[7],cl[2]), plot_distr(CF_item[8],cl[2]),
                   plot_distr(CF_item[9],cl[2]), plot_distr(CF_item[10],cl[2]),
                   plot_distr(CF_item[11],cl[2]), plot_distr(CF_item[12],cl[2]),
-                  labels = label[1:9], vjust = 1, hjust=-2, label_size=11, ncol=4, nrow=3)
+                  labels = label[1:12], vjust = 1, hjust=-2, label_size=11, ncol=4, nrow=3)
 
-p_CF2 <- plot_grid(plot_distr(CF_item[12],cl[2]), plot_distr(CF_item[13],cl[2]), 
+p_CF2 <- plot_grid( plot_distr(CF_item[13],cl[2]), 
                    plot_distr(CF_item[14],cl[2]), plot_distr(CF_item[15],cl[2]), 
                    plot_distr(CF_item[16],cl[2]), plot_distr(CF_item[17],cl[2]),
-                   labels = label[10:17], vjust = 1, hjust=-2, label_size=11, ncol=4, nrow=3)
+                   labels = label[13:17], vjust = 1, hjust=-2, label_size=11, ncol=4, nrow=3)
 
-### HD----------------------
+### p_HD1 p_HD_2----------------------
 item <- unname(unlist(var_info[var_info$construct_en=="HD" & !is.na(var_info$construct_en),"vars_en"]))
 label <- unlist(var_info[var_info$construct_en=="HD" & !is.na(var_info$construct_en),"con_num"])
 
@@ -99,7 +111,7 @@ p_HD2 <- plot_grid(plot_distr(item[13],cl[3]), plot_distr(item[14],cl[3]),
                    plot_distr(item[19],cl[3]), plot_distr(item[20],cl[3]),
                    labels = label[13:20], vjust = 1, hjust=-2, label_size=11, ncol=4, nrow=3)
 
-### RF----------------------
+### p_RF----------------------
 item <- unname(unlist(var_info[var_info$construct_en=="RF" & !is.na(var_info$construct_en),"vars_en"]))
 label <- unlist(var_info[var_info$construct_en=="RF" & !is.na(var_info$construct_en),"con_num"])
 
@@ -134,8 +146,9 @@ cor_mt <- round(cor(All_data), 2) # rounded corr matrix
 #     cor_mt[i,i] <- 0        # to free
 # }
 
-col3 <- colorRampPalette(c("purple","blue","white", "red", "orange"))
-corrplot(cor_mt, method="color",  
-         type="full", order="hclust",
-         sig.level = 0.05, insig = "blank", col=col3(200))
+## Correlation matrix plot: static
+# col3 <- colorRampPalette(c("purple","blue","white", "red", "orange"))
+# corrplot(cor_mt, method="color",  
+#          type="full", order="hclust",
+#          sig.level = 0.05, insig = "blank", col=col3(200))
 
