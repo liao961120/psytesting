@@ -30,9 +30,6 @@ colnames(All_data) <- var_info$con_num[1:62]
 All_data <- All_data[,-(27:32)] # without Fk
 cor_mt <- round(cor(All_data), 2) # rounded corr matrix
 
-# for (i in 1:nrow(cor_mt)){ # set diagonal from 1 to 0
-#     cor_mt[i,i] <- 0        # to free
-# }
 
 col3 <- colorRampPalette(c("purple","blue","white", "red", "orange"))
 # corpl <- corrplot(cor_mt, method="color",  

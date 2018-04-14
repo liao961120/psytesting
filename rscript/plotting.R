@@ -58,8 +58,11 @@ pl_cutoff <- ggplot(Fk_cutoff)+
 plot_distr <- function(item, color="#F8766D"){
     x_axis <- as.character(unlist((psy_test_f[,item])))
     ggplot()+
-        geom_bar(aes(x=x_axis), fill=color)+
-        scale_y_continuous(limits = c(0,125))+
+        geom_bar(aes(x=x_axis, 
+                     y=(..count..)/sum(..count..)),
+                     fill=color)+
+        scale_y_continuous(labels=scales::percent,
+                           limits = c(0, 0.85))+
         scale_x_discrete(limits=c("1","2","3","4","5"))+
         theme +
         labs(x="", y="")
@@ -122,7 +125,7 @@ p_RF <- plot_grid(plot_distr(item[1],cl[4]), plot_distr(item[2],cl[4]),
                    plot_distr(item[9],cl[4]), plot_distr(item[10],cl[4]),
                    labels = label[1:10], vjust = 1, hjust=-2, label_size=11, ncol=4, nrow=3)
 
-## correlation matrix-------------------
+## correlation matrix(numeric)-------------------
 AT_item <- var_info$vars_en[var_info$construct_en=="AT"]
 AT_item <- AT_item[!is.na(AT_item)]
 CF_item <- var_info$vars_en[var_info$construct_en=="CF"]
