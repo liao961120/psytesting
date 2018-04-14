@@ -1,7 +1,7 @@
 language: r
 pandoc_version: 1.19.2.1
     
-script:
+script: travis_wait 30
   - Rscript -e 'rmarkdown::render_site(input="./website_source", encoding = "UTF-8")'
 
 cache:
