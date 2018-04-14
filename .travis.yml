@@ -2,7 +2,8 @@ language: r
 pandoc_version: 1.19.2.1
     
 script:
-  - Rscript -e 'setwd("./website_source") rmarkdown::render_site(encoding = "UTF-8")'
+  - Rscript -e 'setwd("./website_source")'
+  - Rscript -e 'rmarkdown::render_site(encoding = "UTF-8")'
 
 cache:
   packages: yes
