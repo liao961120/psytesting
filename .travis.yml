@@ -1,0 +1,18 @@
+language: r
+pandoc_version: 1.19.2.1
+    
+script:
+  - Rscript -e 'rmarkdown::render_site(encoding = "UTF-8")'
+
+cache:
+  packages: yes
+  directories:
+
+deploy:
+  provider: pages
+  skip-cleanup: true
+  github-token: $GH_TOKEN  # Set in travis-ci.org dashboard, marked secure
+  keep-history: true
+  local-dir: _site # web output directory 
+  on:
+    branch: master

@@ -1,0 +1,6 @@
+Package: placeholder
+Type: Book
+Title: Does not matter.
+Version: 0.0.1
+Imports: tidyverse, rmarkdown, knitr, latex2exp, scales, corrplot, plotly, RColorBrewer, heatmaply, svglite
+Remotes: markheckmann/mat2tex
