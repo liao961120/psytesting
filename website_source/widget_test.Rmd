@@ -55,11 +55,9 @@ library(cowplot)
 source("./rscript/plotting_descri.R", encoding = "utf-8")
 ```
 ```{r fig.width=5.5, fig.height=2}
-dept
-```
-```{r fig.width=5.5, fig.height=2}
 college
 ```
+
 
 <br>
 
