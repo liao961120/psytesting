@@ -1,3 +1,5 @@
+knitr
+gdtools
 forcats
 heatmaply
 viridis
@@ -8,14 +10,9 @@ corrplot
 scales
 cowplot
 plotly
+ggplot2
 dplyr
 readr
-gdtools
-ggplot2
-htmltools
-kableExtra
-knitr
-svglite
 stats
 graphics
 grDevices
