@@ -75,6 +75,6 @@ plot_grid(gender_box_plot,ntu_box_plot,grade_box_plot, nrow=2, rel_heights = c(1
 
 
 ```{r}
-knitr::write_bib(.packages(), 'packages.bib')
+.packages() %>% write(file = "packages.txt")
 ```
 
