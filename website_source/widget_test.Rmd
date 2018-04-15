@@ -71,8 +71,13 @@ plot_grid(gender, grade, ncol=2)
 ```{r fig.height=2.5, fig.width=6}
 library(cowplot)
 source("./rscript/anova.R", encoding = "utf-8")
+```
 
-plot_grid(gender_box_plot, ntu_box_plot, nrow = 1)
+```{r fig.height=2.5, fig.width=3}
+gender_box_plot
+```
+```{r fig.height=2.5, fig.width=3}
+ntu_box_plot
 ```
 
 ```{r fig.height=3, fig.width=3.5}
