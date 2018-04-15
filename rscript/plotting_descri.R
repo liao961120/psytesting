@@ -74,7 +74,7 @@ college <- psy_test_f %>%
     mutate(college = fct_recode(college,"其它"="Other")) %>%
     ggplot(aes(x=college, fill=college))+
     guides(fill=guide_legend(ncol=2))+ # two columns of legend
-    geom_bar(show.legend=T)+
+    geom_bar(show.legend=F)+
     theme(
         legend.key.size=unit(0.7, "line"),
         legend.text=element_text(size=7, face="plain"),
