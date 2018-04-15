@@ -50,11 +50,14 @@ hm
 ```
 
 ## pie chart
-
-```{r fig.width=5.5, fig.height=2}
+```{r}
 library(cowplot)
 source("./rscript/plotting_descri.R", encoding = "utf-8")
+```
+```{r fig.width=5.5, fig.height=2}
 dept
+```
+```{r fig.width=5.5, fig.height=2}
 college
 ```
 
@@ -76,6 +79,6 @@ plot_grid(gender_box_plot,ntu_box_plot,grade_box_plot, nrow=2, rel_heights = c(1
 
 
 ```{r}
-.packages() %>% write(file = "packages.txt")
+.packages() %>% write(file = "packages2.txt")
 ```
 
