@@ -1,4 +1,3 @@
-gdtools
 forcats
 heatmaply
 viridis
@@ -11,6 +10,7 @@ cowplot
 plotly
 dplyr
 readr
+gdtools
 ggplot2
 htmltools
 kableExtra

@@ -1,8 +1,9 @@
 language: r
 pandoc_version: 1.19.2.1
-    
+os: osx
+
 script: 
-  - travis_wait ./travis-tool.sh Rscript -e 'rmarkdown::render_site(input="./website_source", encoding = "UTF-8")'
+  - Rscript -e 'rmarkdown::render_site(input="./website_source", encoding = "UTF-8")'
 
 cache:
   packages: yes
