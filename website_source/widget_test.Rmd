@@ -51,10 +51,11 @@ hm
 
 ## pie chart
 
-```{r fig.width=5.5, fig.height=4}
+```{r fig.width=5.5, fig.height=2}
 library(cowplot)
 source("./rscript/plotting_descri.R", encoding = "utf-8")
-plot_grid(dept, college, nrow=2)
+dept
+college
 ```
 
 <br>

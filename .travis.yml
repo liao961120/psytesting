@@ -1,6 +1,5 @@
 language: r
 pandoc_version: 1.19.2.1
-os: osx
 
 script: 
   - Rscript -e 'rmarkdown::render_site(input="./website_source", encoding = "UTF-8")'

@@ -73,6 +73,7 @@ college <- psy_test_f %>%
     mutate(college = fct_lump(college, n=9)) %>%
     mutate(college = fct_recode(college,"其它"="Other")) %>%
     ggplot(aes(x=college, fill=college))+
+    guides(fill=guide_legend(ncol=2))+ # two columns of legend
     geom_bar(show.legend=T)+
     theme(
         legend.key.size=unit(0.7, "line"),
@@ -95,6 +96,7 @@ dept <- psy_test_f %>%
     mutate(dept = fct_lump(dept, n=12)) %>%
     mutate(dept = fct_recode(dept,"其它"="Other")) %>%
     ggplot(aes(x=dept, fill=dept))+
+    guides(fill=guide_legend(ncol=2))+ # two columns of legend
     geom_bar(show.legend=T)+
     theme(
         legend.key.size=unit(0.7, "line"),

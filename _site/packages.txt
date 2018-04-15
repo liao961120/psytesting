@@ -1,8 +1,0 @@
-dplyr
-stats
-graphics
-grDevices
-utils
-datasets
-methods
-base
