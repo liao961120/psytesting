@@ -11,7 +11,7 @@ before_install:
 
 script: 
   - make ./data
-  - Rscript -e 'rmarkdown::render_site(input="./website_source", encoding = "UTF-8")'
+  - Travis_wait 30 Rscript -e 'rmarkdown::render_site(input="./website_source", encoding = "UTF-8")'
 
 cache:
   packages: yes
