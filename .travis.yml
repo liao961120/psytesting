@@ -1,6 +1,14 @@
 language: r
 pandoc_version: 1.19.2.1
 
+before_install:
+  - sudo apt-get install language-pack-zh*    # install Chinese lang support
+  - sudo apt-get install chinese*             # install Chinese lang support
+  - sudo mkdir /usr/share/fonts/truetype/noto                           # install Chinese font NotoSansCJK TC
+  - sudo cp ./NotoSansCJKtc.otf /usr/share/fonts/truetype/noto          # install Chinese font NotoSansCJK TC
+  - sudo chmod 755 /usr/share/fonts/truetype/noto/NotoSansCJKtc.otf     # install Chinese font NotoSansCJK TC
+  - fc-cache                                                            # install Chinese font NotoSansCJK TC
+
 script: 
   - make ./data
   - Rscript -e 'rmarkdown::render_site(input="./website_source", encoding = "UTF-8")'
